@@ -1,0 +1,76 @@
+﻿@page "/"
+@using SmartComponentsJp.Models
+@using SmartComponentsJp.Utils
+@using SmartComponents
+
+<PageTitle>Home</PageTitle>
+
+@{
+    Verifier.Verify(Employee); 
+}
+
+<h1>Smart Components 日本語テスト</h1>
+
+<EditForm Model="Employee" OnSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>名前</label>
+        <InputText @bind-Value="Employee.Name" />
+    </div>
+
+    <div>
+        <label>郵便番号</label>
+        <InputText @bind-Value="Employee.ZipCode" />
+    </div>
+    <div>
+        <label>住所</label>
+        <InputText @bind-Value="Employee.Address" />
+    </div>
+    <div>
+        <label>電話番号</label>
+        <InputText @bind-Value="Employee.PhoneNumber" />
+    </div>
+    <div>
+        <label>メールアドレス</label>
+        <InputText @bind-Value="Employee.EmailAddress" />
+    </div>
+
+    <button type="submit">Submit</button>
+    <SmartPasteButton DefaultIcon />
+</EditForm>
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <p>@Message</p>
+}
+
+<div>
+    <h4>例文</h4>
+    <pre>
+お世話になっております。田中 太郎です。
+以下の住所に送付をお願いします。
+〒100-8111 東京都千代田区千代田1-1. 
+電話 03-3213-1111
+
+メールはこちらの sample@example.com にお願いします。
+    </pre>
+</div>
+@code {
+    private Employee? Employee { get; set; }
+    private string Message { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        Employee = new();
+    }
+
+    private void OnSubmit(EditContext editContext)
+    {
+        Verifier.Verify(Employee);
+
+        Message = $"{Employee.Name} のデータを登録しました。";
+        Employee = new();
+    }
+}
